@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const Navigate = useNavigate();
 
   const API = process.env.REACT_APP_API;
 
-  console.log(process.env);
-
-  const loadData = async () => {
-    const res = await axios.get(`${API}/getAllStudents`);
-    setData(res.data);
-    console.log(res.data);
-  };
-
   useEffect(() => {
+      const loadData = async () => {
+      const res = await axios.get(`${API}/getAllStudents`);
+      setData(res.data);
+    };
     loadData();
-  }, []);
+  }, [API]);
 
   const deleteContact = async (id) => {
     if (window.confirm(`Are You Sure that you want to delete that Student ?`)) {
       await axios.delete(`${API}/delete/${id}`);
       toast.success(`Contact Deleted Successfully !!`,{ position : "top-right" });
-      setTimeout(() => loadData(), 500);
+      setTimeout(() => Navigate('/') , 500);
     }
   };
 
